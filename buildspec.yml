@@ -1,36 +1,29 @@
 version: 0.2
 
+env:
+  variables:
+    IMAGE_REPO_NAME: "dilip/guvi"
+    IMAGE_TAG: ${CODEBUILD_BUILD_NUMBER}
+
 phases:
-  install:
-    runtime-versions:
-      java: corretto11
+  pre_build:
     commands:
-      - echo "🔧 Installing dependencies..."
-      - apt-get update && apt-get install -y curl wget unzip
-      - echo " Downloading Dependency-Check..."
-      - wget https://github.com/jeremylong/DependencyCheck/releases/download/v12.1.0/dependency-check-12.1.0-release.zip
-      - unzip dependency-check-12.1.0-release.zip -d /opt/
-      - rm dependency-check-12.1.0-release.zip
-      - export PATH=$PATH:/opt/dependency-check
-      - echo " Dependency-Check installed."
+      - echo "🔐 Logging in to Amazon ECR..."
+      - aws --version
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+      - REGION=$(aws configure get region)
+      - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
+      - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$IMAGE_REPO_NAME
+      - echo "📦 Repository URI: $REPOSITORY_URI"
 
   build:
     commands:
-      - echo " Starting OWASP Dependency-Check..."
-      - mkdir -p dependency-check-reports
-      - |
-        /opt/dependency-check/bin/dependency-check.sh \
-          --project "guvi-mini-project-1" \
-          --scan dist \
-          --out dependency-check-reports \
-          --format "ALL"
-      - echo "📄 Dependency-Check Reports:"
-      - ls -la dependency-check-reports
+      - echo "🏗️ Building the Docker image..."
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG
 
   post_build:
     commands:
-      - echo "✅ Build completed"
-
-artifacts:
-  files:
-    - dependency-check-reports/**
+      - echo "🚀 Pushing the Docker image to ECR..."
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo "✅ Image pushed successfully: $REPOSITORY_URI:$IMAGE_TAG"
