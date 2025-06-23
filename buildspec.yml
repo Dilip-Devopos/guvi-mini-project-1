@@ -3,7 +3,7 @@ version: 0.2
 env:
   variables:
     IMAGE_REPO_NAME: "dilip/guvi"
-    IMAGE_TAG: ${CODEBUILD_BUILD_NUMBER}
+    IMAGE_TAG: "${CODEBUILD_BUILD_NUMBER}"
 
 phases:
   pre_build:
@@ -14,7 +14,7 @@ phases:
       - REGION=$(aws configure get region)
       - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
       - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$IMAGE_REPO_NAME
-      - echo Repository URI: $REPOSITORY_URI
+      - echo "📦 Repository URI: $REPOSITORY_URI"
 
   build:
     commands:
@@ -26,5 +26,5 @@ phases:
     commands:
       - echo "🚀 Pushing the Docker image to ECR..."
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - echo "Image pushed successfully: $REPOSITORY_URI:$IMAGE_TAG"
+      - echo "✅ Image pushed successfully: $REPOSITORY_URI:$IMAGE_TAG"
 
