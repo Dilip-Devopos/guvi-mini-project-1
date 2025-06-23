@@ -15,6 +15,7 @@ phases:
     commands:
       - echo Build started on `date`
       - ls
+      - mkdir -p dependency-check-reports
       - /opt/dependency-check/bin/dependency-check.sh \
           --project "guvi-mini-project-1" \
           --scan guvi-mini-project-1 \
