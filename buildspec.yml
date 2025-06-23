@@ -18,9 +18,10 @@ phases:
     commands:
       - echo "🚀 Starting OWASP Dependency-Check..."
       - mkdir -p dependency-check-reports
-      - /opt/dependency-check/bin/dependency-check.sh \
+      - |
+        /opt/dependency-check/bin/dependency-check.sh \
           --project "guvi-mini-project-1" \
-          --scan . \
+          --scan dist \
           --out dependency-check-reports \
           --format "ALL"
       - echo "📄 Dependency-Check Reports:"
