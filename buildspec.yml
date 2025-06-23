@@ -16,15 +16,14 @@ phases:
       - echo Build started on `date`
       - ls
       - /opt/dependency-check/bin/dependency-check.sh \
-          --project "Guvi-mini-Project" \
-          --scan Guvi-mini-project \
+          --project "guvi-mini-project-1" \
+          --scan guvi-mini-project-1 \
           --out dependency-check-reports \
           --format "ALL" \
           --data /usr/share/dependency-check/data
   post_build:
     commands:
-      - echo Configuring NGINX
-
+      - echo  Build completed
 artifacts:
   files:
     - '**/*'
