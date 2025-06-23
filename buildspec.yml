@@ -7,16 +7,16 @@ phases:
     commands:
       - echo "🔧 Installing dependencies..."
       - apt-get update && apt-get install -y curl wget unzip
-      - echo "⬇️ Downloading Dependency-Check..."
-      - wget wget https://github.com/jeremylong/DependencyCheck/releases/download/v12.1.0/dependency-check-12.1.0-release.zip
+      - echo " Downloading Dependency-Check..."
+      - wget https://github.com/jeremylong/DependencyCheck/releases/download/v12.1.0/dependency-check-12.1.0-release.zip
       - unzip dependency-check-12.1.0-release.zip -d /opt/
       - rm dependency-check-12.1.0-release.zip
       - export PATH=$PATH:/opt/dependency-check
-      - echo "✅ Dependency-Check installed."
+      - echo " Dependency-Check installed."
 
   build:
     commands:
-      - echo "🚀 Starting OWASP Dependency-Check..."
+      - echo " Starting OWASP Dependency-Check..."
       - mkdir -p dependency-check-reports
       - |
         /opt/dependency-check/bin/dependency-check.sh \
