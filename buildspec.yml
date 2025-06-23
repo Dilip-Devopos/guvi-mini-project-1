@@ -24,7 +24,6 @@ phases:
       - echo IMAGE_TAG=$IMAGE_TAG
   build:
     commands:
-      - echo " Starting OWASP Dependency-Check..."
       - mkdir -p dependency-check-reports
       - |
         /opt/dependency-check/bin/dependency-check.sh \
@@ -32,8 +31,8 @@ phases:
           --scan dist \
           --out dependency-check-reports \
           --format "HTML"
-      - echo "📄 Dependency-Check Reports:"
-      - ls -la dependency-check-reports 
+      - echo "📄 Dependency-Check Reports Generated:"
+      - ls -la dependency-check-reports
       - echo Building Docker image...
       - docker build -t $IMAGE_NAME:$IMAGE_TAG .
       - docker tag $IMAGE_NAME:$IMAGE_TAG $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG
