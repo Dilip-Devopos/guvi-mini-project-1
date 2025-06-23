@@ -8,9 +8,9 @@ phases:
       - echo "🔧 Installing dependencies..."
       - apt-get update && apt-get install -y curl wget unzip
       - echo "⬇️ Downloading Dependency-Check..."
-      - wget https://github.com/jeremylong/DependencyCheck/releases/download/v9.0.10/dependency-check-9.0.10-release.zip
-      - unzip dependency-check-9.0.10-release.zip -d /opt/
-      - rm dependency-check-9.0.10-release.zip
+      - wget wget https://github.com/jeremylong/DependencyCheck/releases/download/v12.1.0/dependency-check-12.1.0-release.zip
+      - unzip dependency-check-12.1.0-release.zip -d /opt/
+      - rm dependency-check-12.1.0-release.zip
       - export PATH=$PATH:/opt/dependency-check
       - echo "✅ Dependency-Check installed."
 
