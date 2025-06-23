@@ -17,6 +17,13 @@ phases:
       - ls
       - cd /opt/dependency-check
       - ls
+      - mkdir -p dependency-check-reports
+      - cd /opt/dependency-check/bin/dependency-check.sh \
+              --project "mini-project-1" \
+              --scan guvi-mini-project-1 \
+              --out dependency-check-reports \
+              --format "ALL" \
+              --data /usr/share/dependency-check/data
   post_build:
     commands:
       - echo  Build completed
