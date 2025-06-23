@@ -15,7 +15,7 @@ phases:
     commands:
       - echo Build started on `date`
       - ls
-      - cd dependency-check
+      - cd /opt/dependency-check
       - ls
   post_build:
     commands:
