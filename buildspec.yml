@@ -2,31 +2,34 @@ version: 0.2
 
 phases:
   install:
+    runtime-versions:
+      java: corretto11
     commands:
-      - echo cloning repository........................................
+      - echo "🔧 Installing dependencies..."
       - apt-get update && apt-get install -y curl wget unzip
-      - echo Installing Dependency-Check...............................
+      - echo "⬇️ Downloading Dependency-Check..."
       - wget https://github.com/jeremylong/DependencyCheck/releases/download/v9.0.10/dependency-check-9.0.10-release.zip
       - unzip dependency-check-9.0.10-release.zip -d /opt/
       - rm dependency-check-9.0.10-release.zip
-      - echo Dependency-Check installed successfully...................
       - export PATH=$PATH:/opt/dependency-check
+      - echo "✅ Dependency-Check installed."
+
   build:
     commands:
-      - echo Build started on `date`
-      - ls
+      - echo "🚀 Starting OWASP Dependency-Check..."
       - mkdir -p dependency-check-reports
       - /opt/dependency-check/bin/dependency-check.sh \
           --project "guvi-mini-project-1" \
-          --scan ./dist \
+          --scan guvi-mini-project-1 \
           --out dependency-check-reports \
-          --format "HTML" \
-          --log dependency-check-reports/depcheck.log
-       - cat dependency-check-reports/depcheck.log
-       - ls dependency-check-reports
+          --format "ALL"
+      - echo "📄 Dependency-Check Reports:"
+      - ls -la dependency-check-reports
+
   post_build:
     commands:
-      - echo  Build completed
+      - echo "✅ Build completed"
+
 artifacts:
   files:
-    - '**/*'
+    - dependency-check-reports/**
