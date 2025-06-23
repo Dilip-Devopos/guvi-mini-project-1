@@ -23,7 +23,7 @@ phases:
     commands:
       - echo Pushing image to ECR...
       - docker push $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG
-      - echo Docker image successfully pushed: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG
+      - echo Image pushed successfully!
 
 artifacts:
   files:
