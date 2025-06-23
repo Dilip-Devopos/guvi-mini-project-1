@@ -3,11 +3,24 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo cloning repository
+      - echo cloning repository........................................
+      - apt-get update && apt-get install -y curl wget unzip
+      - echo Installing Dependency-Check...............................
+      - wget https://github.com/jeremylong/DependencyCheck/releases/download/v9.0.10/dependency-check-9.0.10-release.zip
+      - unzip dependency-check-9.0.10-release.zip -d /opt/
+      - rm dependency-check-9.0.10-release.zip
+      - echo Dependency-Check installed successfully...................
+      - export PATH=$PATH:/opt/dependency-check
   build:
     commands:
       - echo Build started on `date`
       - ls
+      - /opt/dependency-check/bin/dependency-check.sh \
+          --project "Guvi-mini-Project" \
+          --scan Guvi-mini-project \
+          --out dependency-check-reports \
+          --format "ALL" \
+          --data /usr/share/dependency-check/data
   post_build:
     commands:
       - echo Configuring NGINX
