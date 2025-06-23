@@ -17,8 +17,8 @@ phases:
       - ls
       - mkdir -p dependency-check-reports
       - /opt/dependency-check/bin/dependency-check.sh \
-          --project "guvi-mini-project-1" \
-          --scan . \
+          --project "mini-project-1" \
+          --scan guvi-mini-project-1 \
           --out dependency-check-reports \
           --format "ALL" \
           --data /usr/share/dependency-check/data
