@@ -9,11 +9,13 @@ env:
 phases:
   pre_build:
     commands:
-      - OS_CODENAME=$(grep "VERSION_CODENAME" /etc/os-release | cut -d'=' -f2) && \
-         -- curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor -o /usr/share/keyrings/trivy-archive-keyring.gpg && \
-         -- echo "deb [signed-by=/usr/share/keyrings/trivy-archive-keyring.gpg] https://aquasecurity.github.io/trivy-repo/deb $OS_CODENAME main" | tee /etc/apt/sources.list.d/trivy.list && \
-         -- apt update && apt install -y trivy && \
-         -- rm -rf /var/lib/apt/lists/*
+      - apt update && apt install -y gnupg curl
+      - |
+        OS_CODENAME=$(grep "VERSION_CODENAME" /etc/os-release | cut -d'=' -f2)
+        curl -fsSL https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor -o /usr/share/keyrings/trivy-archive-keyring.gpg
+        echo "deb [signed-by=/usr/share/keyrings/trivy-archive-keyring.gpg] https://aquasecurity.github.io/trivy-repo/deb $OS_CODENAME main" | tee /etc/apt/sources.list.d/trivy.list
+        apt update && apt install -y trivy
+        rm -rf /var/lib/apt/lists/*
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - echo Setting image tag using build number...
