@@ -9,14 +9,6 @@ env:
 phases:
   pre_build:
     commands:
-      - echo "🔧 Installing dependencies..."
-      - apt-get update && apt-get install -y curl wget unzip
-      - echo " Downloading Dependency-Check..."
-      - wget https://github.com/jeremylong/DependencyCheck/releases/download/v12.1.0/dependency-check-12.1.0-release.zip
-      - unzip dependency-check-12.1.0-release.zip -d /opt/
-      - rm dependency-check-12.1.0-release.zip
-      - export PATH=$PATH:/opt/dependency-check
-      - echo " Dependency-Check installed."
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
       - echo Setting image tag using build number...
@@ -24,15 +16,6 @@ phases:
       - echo IMAGE_TAG=$IMAGE_TAG
   build:
     commands:
-      - mkdir -p dependency-check-reports
-      - |
-        /opt/dependency-check/bin/dependency-check.sh \
-          --project "guvi-mini-project-1" \
-          --scan dist \
-          --out dependency-check-reports \
-          --format "HTML"
-      - echo "📄 Dependency-Check Reports Generated:"
-      - ls -la dependency-check-reports
       - echo Building Docker image...
       - docker build -t $IMAGE_NAME:$IMAGE_TAG .
       - docker tag $IMAGE_NAME:$IMAGE_TAG $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG
