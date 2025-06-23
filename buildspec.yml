@@ -21,6 +21,9 @@ phases:
           --scan ./dist \
           --out dependency-check-reports \
           --format "HTML" \
+          --log dependency-check-reports/depcheck.log
+       - cat dependency-check-reports/depcheck.log
+       - ls dependency-check-reports
   post_build:
     commands:
       - echo  Build completed
