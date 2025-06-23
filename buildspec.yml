@@ -2,16 +2,18 @@ version: 0.2
 
 env:
   variables:
-    IMAGE_NAME: dilip/guvi    # Replace with your ECR repo name
-    IMAGE_TAG: "${CODEBUILD_BUILD_NUMBER}"
-    AWS_DEFAULT_REGION: us-east-1      # Replace with your region
-    ACCOUNT_ID: 380561001200           # Replace with your AWS account ID
+    IMAGE_NAME: dilip/guvi   # Replace with your ECR repo name
+    AWS_DEFAULT_REGION: us-east-1    # Replace with your region
+    ACCOUNT_ID: 380561001200         # Replace with your AWS account ID
 
 phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - echo Setting image tag using build number...
+      - IMAGE_TAG=$CODEBUILD_BUILD_NUMBER
+      - echo IMAGE_TAG=$IMAGE_TAG
   build:
     commands:
       - echo Building Docker image...
@@ -21,7 +23,7 @@ phases:
     commands:
       - echo Pushing image to ECR...
       - docker push $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG
-      - echo Image pushed successfully!
+      - echo Docker image successfully pushed: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG
 
 artifacts:
   files:
