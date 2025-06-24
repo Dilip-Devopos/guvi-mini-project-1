@@ -34,7 +34,7 @@ phases:
       - echo Image pushed successfully!
       - echo Updating deployment YAML with new image tag...
       - |
-        sed -i "s|image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:.*|image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG|g" k8s/deployment.yaml
+        sed -i "s|image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:.*|image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG|g" deployment.yml
       - echo Sending email via SNS...
       - |
         aws sns publish \
