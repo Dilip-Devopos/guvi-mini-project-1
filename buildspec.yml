@@ -35,7 +35,7 @@ phases:
 
       - echo Updating deployment YAML with new image tag...
       - |
-        sed -i "s|image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:.*|image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG|g" dep
+        sed -i "s|image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:.*|image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG|g" deployment.yaml
       - echo "🔧 Configuring Git..."
       - git config --global user.email "codebuild@example.com"
       - git config --global user.name "AWS CodeBuild"
