@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: brain-tasks-deployment
+  labels:
+    app: brain-tasks
 spec:
   replicas: 2
   selector:
@@ -16,5 +18,5 @@ spec:
         - name: brain-tasks
           image: 380561001200.dkr.ecr.us-east-1.amazonaws.com/dilip/guvi:60
           ports:
-            - containerPort: 3000
+            - containerPort: 80
 
