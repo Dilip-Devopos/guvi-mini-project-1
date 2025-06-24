@@ -32,9 +32,26 @@ phases:
       - echo Pushing image to ECR...
       - docker push $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG
       - echo Image pushed successfully!
+
       - echo Updating deployment YAML with new image tag...
       - |
-        sed -i "s|image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:.*|image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG|g" deployment.yml
+        sed -i "s|image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:.*|image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG|g" dep
+      - echo "🔧 Configuring Git..."
+      - git config --global user.email "codebuild@example.com"
+      - git config --global user.name "AWS CodeBuild"
+
+      - echo " Adding modified deployment.yml..."
+      - git add deployment.yml
+
+      - echo "Committing changes..."
+      - git commit -m " Updated deployment tag to $IMAGE_TAG | CodeBuild"
+
+      - echo " Updating remote URL with credentials (hidden)..."
+      - git remote set-url origin https://$GIT_USERNAME:$GIT_TOKEN@github.com/Dilip-Devopos/guvi-mini-project-1.git
+
+      - echo " Pushing to GitHub..."
+      - git push origin main 
+
       - echo Sending email via SNS...
       - |
         aws sns publish \
