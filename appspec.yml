@@ -5,8 +5,11 @@ files:
     destination: /home/ubuntu
 
 hooks:
+  BeforeInstall:
+    - location: delete.sh
+      timeout: 120
+      runas: ubuntu
   AfterInstall:
     - location: deploy.sh
       timeout: 300
       runas: ubuntu
-
