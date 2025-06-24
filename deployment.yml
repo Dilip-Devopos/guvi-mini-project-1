@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: brain-tasks
-          image: 380561001200.dkr.ecr.us-east-1.amazonaws.com/dilip/guvi:44
+          image: 380561001200.dkr.ecr.us-east-1.amazonaws.com/dilip/guvi:45
           ports:
             - containerPort: 3000
 
