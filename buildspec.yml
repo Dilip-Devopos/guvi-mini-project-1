@@ -33,13 +33,12 @@ phases:
       - docker push $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG
       - echo Image pushed successfully!
 
-      - echo "🔧 Checking out main branch..."
-      - git checkout main    
+      - echo "🔧 Checking out main branch..."  
 
       - echo Updating deployment YAML with new image tag...
       - |
         sed -i "s|image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:.*|image: $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG|g" deployment.yml
-        
+
       - echo "🔧 Configuring Git..."
       - git config --global user.email "codebuild@example.com"
       - git config --global user.name "AWS CodeBuild"
