@@ -1,70 +1,169 @@
-Brain Tasks App - CI/CD Deployment on AWS with Kubernetes
-This document outlines the end-to-end deployment process of the Brain Tasks React application using AWS services like ECR, EKS, CodePipeline, CodeBuild, and CodeDeploy, including monitoring with CloudWatch.
-📌 Project Overview
+
+# Brain Tasks App - CI/CD Deployment on AWS with Kubernetes
+
+## 📌 Project Overview
+
 This project automates the deployment of a production-ready React application using containerization, continuous integration, and delivery mechanisms on AWS. It covers Docker image builds, ECR image hosting, EKS deployment, and end-to-end pipeline integration with CodePipeline and monitoring with CloudWatch.
-📖 Step-by-Step Process
-Step 1: Clone and Build the React Application
-Clone the React application and build it for production:
 
-git clone https://github.com/Vennilavan12/Brain-Tasks-App.git
-cd Brain-Tasks-App
-npm install
-npm run build
+---
 
-The production files will be placed in the `/dist` directory.
-Step 2: Dockerize the Application
-Use the following Dockerfile to serve the React app using NGINX:
+## 🧠 Application
+
+- **Repository**: [Brain Tasks App](https://github.com/Vennilavan12/Brain-Tasks-App.git)
+- **Port**: Runs on `3000` (exposed on port `80` via NGINX)
+- **Frontend**: React
+- **Build Output**: `/dist` directory copied to NGINX container
+
+---
+
+## 🚢 Dockerization
+
+- **Base Image**: `public.ecr.aws/nginx/nginx:1.25`
+- **Custom Dockerfile** removes default HTML and serves app from `/usr/share/nginx/html`
+- **Exposed Port**: `80`
+
+```Dockerfile
 FROM public.ecr.aws/nginx/nginx:1.25
 RUN rm -rf /usr/share/nginx/html/*
 COPY /dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
+```
 
-Build and tag the Docker image:
-docker build -t dilip/guvi:latest .
+---
 
-Step 3: Push Docker Image to Amazon ECR
-Login to ECR and push your image:
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <account-id>.dkr.ecr.us-east-1.amazonaws.com
-docker tag dilip/guvi:latest <account-id>.dkr.ecr.us-east-1.amazonaws.com/dilip/guvi:<build-number>
-docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/dilip/guvi:<build-number>
+## 🐳 Amazon ECR
 
-Step 4: Deploy on Amazon EKS
-Use the following `deployment.yml` and `service.yml` to deploy your app:
-- Deployment with 2 replicas and readiness/liveness probes
-- Service type: LoadBalancer to expose externally
-Run the deployment using kubectl:
+- Created private ECR repository: `dilip/guvi`
+- Tagged and pushed Docker images via CodeBuild
+- Image naming: `380561001200.dkr.ecr.us-east-1.amazonaws.com/dilip/guvi:<build-number>`
+
+---
+
+## ☸️ Kubernetes on AWS EKS
+
+- **Deployment File**: `deployment.yml`
+- **Service File**: `service.yml`
+- **Namespace**: `default`
+- **Probes**: Readiness and Liveness configured
+- **Resources**: Requests and limits set for CPU and memory
+
+```bash
 kubectl apply -f deployment.yml
 kubectl apply -f service.yml
+```
 
-Step 5: Setup CodePipeline for CI/CD
-CodePipeline is configured to:
+✅ **Add your LoadBalancer DNS/ARN here**
 
-- Source: GitHub Repository
-- Build: CodeBuild (defined via buildspec.yml)
-- Deploy: CodeDeploy (defined via appspec.yml + deploy.sh)
+---
 
-This allows end-to-end automation from code push to EKS deployment.
-Step 6: Monitor with CloudWatch & Fluent Bit
-Pod logs from EKS are shipped to CloudWatch using Fluent Bit. EC2 system and CodeDeploy logs are sent using the CloudWatch agent.
-Fluent Bit Helm Chart Install:
+## ⚙️ AWS CodePipeline Setup
+
+### 1. Source
+- GitHub repository connected to trigger pipeline
+
+### 2. Build – CodeBuild
+- **File**: `buildspec.yml`
+- Installs Trivy for image scanning
+- Builds and tags Docker image
+- Pushes to ECR
+- Updates `deployment.yml` with latest image tag
+- Pushes updated file back to GitHub
+- Sends SNS notification on success
+
+### 3. Deploy – CodeDeploy
+- **AppSpec File**: `appspec.yml`
+- Copies all files to `/home/ubuntu` on EC2 instance
+- Executes `deploy.sh` to apply Kubernetes resources
+
+---
+
+## 🛠️ Scripts Overview
+
+### `deploy.sh`
+
+- Checks for existing K8s deployment/service
+- Deletes old deployment if present
+- Applies new deployment YAML
+- Creates service only if it doesn’t already exist
+
+### `appspec.yml`
+
+- Copies codebase to EC2 instance
+- Runs `deploy.sh` under `ubuntu` user
+
+---
+
+## 📊 Monitoring with CloudWatch
+
+### EC2 Log Monitoring:
+
+- Installed **Amazon CloudWatch Agent**
+- Monitors:
+  - `/var/log/syslog`
+  - CodeDeploy logs (`codedeploy-agent-deployments.log`)
+- Log groups:
+  - `/ec2/syslog`
+  - `/ec2/codedeploy`
+
+### EKS Pod Logs:
+
+- Installed Fluent Bit via Helm:
+
+```bash
 helm repo add aws-observability https://aws.github.io/eks-charts
-helm upgrade --install aws-for-fluent-bit aws-observability/aws-for-fluent-bit \
-  --namespace amazon-cloudwatch \
-  --create-namespace \
-  --set cloudWatch.enabled=true \
-  --set cloudWatch.region=us-east-1 \
-  --set cloudWatch.logGroupName=/aws/eks/pod-logs \
-  --set serviceAccount.create=true
+helm upgrade --install aws-for-fluent-bit aws-observability/aws-for-fluent-bit   --namespace amazon-cloudwatch   --create-namespace   --set cloudWatch.enabled=true   --set cloudWatch.region=us-east-1   --set cloudWatch.logGroupName=/aws/eks/pod-logs   --set serviceAccount.create=true
+```
 
-📸 Screenshots (To be Added)
-- CodePipeline overview
-- CodeBuild logs
-- CodeDeploy logs
-- Kubernetes `kubectl get all` output
-- CloudWatch log stream view
-👨‍💻 Author & Final Notes
-Dilip
-DevOps Engineer
-GitHub: https://github.com/Dilip-Devopos
-Ensure EC2 instances and EKS nodes have necessary IAM permissions and open ports.
+- Pod logs are forwarded to `/aws/eks/pod-logs` group in CloudWatch.
+
+---
+
+## 📂 Folder Structure
+
+```bash
+├── appspec.yml
+├── buildspec.yml
+├── deploy.sh
+├── deployment.yml
+├── service.yml
+├── Dockerfile
+├── dist/
+└── README.md
+```
+
+---
+
+## ✅ Deployment Verification
+
+- Run `kubectl get all` to verify resources
+- Access the app using the LoadBalancer DNS name
+
+---
+
+## 📸 Screenshots (To be Added)
+
+- AWS CodePipeline stages
+- CodeBuild logs and success
+- CodeDeploy history
+- Kubernetes dashboard or `kubectl get all` output
+- CloudWatch log group snapshots
+
+---
+
+## 👨‍💻 Author
+
+**Dilip**  
+DevOps Engineer  
+GitHub: [Dilip-Devopos](https://github.com/Dilip-Devopos)
+
+---
+
+## 📌 Notes
+
+- Ensure EC2 instance has:
+  - CodeDeploy agent installed
+  - CloudWatch agent installed
+  - IAM role with EKS + ECR + SNS + CodeDeploy permissions
+- All traffic allowed in EC2/EKS Security Group
+- Kubernetes context properly configured in EC2
