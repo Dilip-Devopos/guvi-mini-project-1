@@ -1,4 +1,9 @@
 #!/bin/bash
+set -e  # exit on any error
+set -x  # print commands (debug)
+
+# Go to the directory where deployment files were copied
+cd /home/ubuntu
 
 # Set the namespace if needed
 NAMESPACE=default
