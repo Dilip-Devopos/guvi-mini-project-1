@@ -1,6 +1,9 @@
-
 # Brain Tasks Reactjs Application - CI/CD Deployment on AWS with EKS-Cluster
 
+## CLick to visit Deployment:
+
+        http://abb59c4b452064c768a9c0975c9ced80-1446271263.us-east-1.elb.amazonaws.com
+        
 ## 📌 Project Overview
 
 This project automates the deployment of a production-ready Reactjs application using containerization, continuous integration, and delivery mechanisms on AWS. It covers Docker image builds, image scanning , ECR image hosting, EKS deployment, and end-to-end pipeline integration with CodePipeline, CodeBuild, CodeDeploy  and monitoring with CloudWatch.
@@ -203,11 +206,17 @@ helm upgrade --install aws-for-fluent-bit aws-observability/aws-for-fluent-bit  
 - Commands to verify
   
     kubectl get pods
+  
     kubectl get svc
+  
     sudo systemctl status amazon-cloudwatch-agent
+  
     kubectl logs aws-for-fluent-bit-95tvt -n amazon-cloudwatch
+  
     eksctl create cluster --name guvi --region us-east-1 --node-type t2.medium
+  
     aws eks --region us-east-1 update-kubeconfig --name guvi
+  
     cat /opt/codedeploy-agent/deployment-root/deployment-logs/codedeploy-agent-deployments.log
 
 ---
