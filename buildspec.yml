@@ -1,10 +1,27 @@
+###################################################################################################################################################################################
+# Buildspec file for AWS CodeBuild to build a Docker image, scan it with Trivy, push it to ECR, and update a GitHub repository with the new image tag.
+###################################################################################################################################################################################
+# Author: Dilip Devopos
+# Date: 2025-06-25
+# Description: This buildspec file is designed to automate the process of building a Docker image, scanning it for vulnerabilities using Trivy, pushing the image to Amazon ECR, and updating a GitHub repository deploymrnt.yml file with the new image tag.
+# It also sends a notification via Amazon SNS upon successful completion of the build process.
+# Requirements:
+# - AWS CodeBuild environment with Docker support.
+# - AWS CLI configured with appropriate permissions to access ECR and SNS.
+# - Trivy installed for vulnerability scanning. 
+# This buildspec file includes:
+# 1. Pre-build phase: Install dependencies, log in to ECR, and set the image tag.
+# 2. Build phase: Build the Docker image and tag it for ECR.
+# 3. Post-build phase: Scan the image with Trivy, push the image to ECR, clone a GitHub repository, update the deployment YAML with the new image tag,
+#    configure Git, commit the changes, and push to GitHub. Finally, send a notification via SNS.
+###################################################################################################################################################################################
 version: 0.2
 
 env:
   variables:
-    IMAGE_NAME: dilip/guvi   # Replace with your ECR repo name
-    AWS_DEFAULT_REGION: us-east-1    # Replace with your region
-    ACCOUNT_ID: 380561001200         # Replace with your AWS account ID
+    IMAGE_NAME: dilip/guvi
+    AWS_DEFAULT_REGION: us-east-1 
+    ACCOUNT_ID: 380561001200
 
 phases:
   pre_build:
