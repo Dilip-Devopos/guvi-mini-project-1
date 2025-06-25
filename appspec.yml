@@ -4,7 +4,7 @@
 # It specifies the deployment configuration, including the files to copy and the hooks to run after installation.
 #########################################################################################################################################################################################
 # Author: Dilip
-# Date: 2025-16-25
+# Date: 2025-06-25
 # Description: This appspec.yml file is designed to work with AWS CodeDeploy to deploy an application to an EC2 instance. 
 # It specifies the files to be copied to the instance and the hooks to run after the installation is complete. 
 # The deployment script (deploy.sh) is executed after the files are copied to the instance. 
