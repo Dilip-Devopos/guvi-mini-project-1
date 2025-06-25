@@ -1,5 +1,12 @@
 # Brain Tasks Reactjs Application - CI/CD Deployment on AWS with EKS-Cluster
 
+## 👨‍💻 Author
+
+**Dilip** 
+GitHub: [Dilip-Devopos](https://github.com/Dilip-Devopos/guvi-mini-project-1)
+
+---
+
 ## CLick to visit Deployment:
 
         http://abb59c4b452064c768a9c0975c9ced80-1446271263.us-east-1.elb.amazonaws.com
@@ -201,6 +208,11 @@ helm upgrade --install aws-for-fluent-bit aws-observability/aws-for-fluent-bit  
 - CloudWatch
       ![image](https://github.com/user-attachments/assets/8887196c-95ef-48a3-bac0-76b0ee55d773)
 
+- Email (Sucess and Failuer)
+      ![image](https://github.com/user-attachments/assets/92e9a0db-0924-417a-beda-353c5fd8a7d1)
+      ![image](https://github.com/user-attachments/assets/e7f7cf78-6aa3-4f96-bda8-5171ef9ca38d)
+      ![image](https://github.com/user-attachments/assets/2a3441e3-268e-4e2b-8512-9ac4e8a2cb7c)
+
 - Commands to verify
   
     kubectl get pods
@@ -219,9 +231,3 @@ helm upgrade --install aws-for-fluent-bit aws-observability/aws-for-fluent-bit  
 
 ---
 
-## 👨‍💻 Author
-
-**Dilip** 
-GitHub: [Dilip-Devopos](https://github.com/Dilip-Devopos/guvi-mini-project-1)
-
----
