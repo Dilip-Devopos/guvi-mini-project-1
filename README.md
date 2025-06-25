@@ -83,8 +83,6 @@ kubectl apply -f deployment.yml
 kubectl apply -f service.yml
 ```
 
-✅ **Add your LoadBalancer DNS/ARN here**
-
 ---
 
 ## ⚙️ AWS CodePipeline Setup
