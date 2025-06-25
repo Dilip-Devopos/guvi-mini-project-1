@@ -1,3 +1,25 @@
+#########################################################################################################################################################################################
+# appspec.yml
+# This file is used by AWS CodeDeploy to deploy the application.
+# It specifies the deployment configuration, including the files to copy and the hooks to run after installation.
+#########################################################################################################################################################################################
+# Author: Dilip
+# Date: 2025-16-25
+# Description: This appspec.yml file is designed to work with AWS CodeDeploy to deploy an application to an EC2 instance. 
+# It specifies the files to be copied to the instance and the hooks to run after the installation is complete. 
+# The deployment script (deploy.sh) is executed after the files are copied to the instance. 
+# The script is expected to handle the application deployment process, such as starting services, configuring the application, etc.
+# Requirements: 
+# - AWS CodeDeploy application configured with an EC2/On-Premises deployment group.
+# - The deployment script (deploy.sh) must be present in the root directory of the repository
+# - The EC2 instance must have the CodeDeploy agent installed and running.
+# - The instance must have the necessary IAM role with permissions to access CodeDeploy and the S
+#   resources specified in the deployment script.
+# - The instance must be tagged with the appropriate tags to match the deployment group.
+# - The instance must have the necessary security group rules to allow traffic on the required ports.
+# - The instance must have the necessary IAM role with permissions to access the resources specified in the
+#   deployment script.
+###########################################################################################################################################################################################
 version: 0.0
 os: linux
 files:
